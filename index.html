@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cadastro de Pessoa Física</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 480px; margin: 40px auto; padding: 0 16px; }
+  label { display: block; margin-top: 12px; font-weight: bold; }
+  input[type="text"], input[type="email"], input[type="date"] {
+    width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box;
+  }
+  .checkbox-linha { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .checkbox-linha label { margin: 0; font-weight: normal; }
+  button { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
+  #resultado { margin-top: 20px; padding: 12px; border-radius: 6px; }
+  .erro { background: #fdecea; color: #611a15; border: 1px solid #f5c6cb; }
+  .sucesso { background: #e6f4ea; color: #1e4620; border: 1px solid #b6e2c0; }
+  ul { margin: 8px 0 0 0; padding-left: 20px; }
+</style>
+</head>
+<body>
+  <h1>Cadastro de Pessoa Física</h1>
+
+  <form id="form-cadastro">
+    <label for="nome">Nome</label>
+    <input type="text" id="nome" name="nome" />
+
+    <label for="cpf">CPF</label>
+    <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" />
+
+    <label for="email">E-mail</label>
+    <input type="email" id="email" name="email" />
+
+    <label for="data_nascimento">Data de nascimento</label>
+    <input type="date" id="data_nascimento" name="data_nascimento" />
+
+    <div class="checkbox-linha">
+      <input type="checkbox" id="possui_cnh" name="possui_cnh" />
+      <label for="possui_cnh">Possui CNH</label>
+    </div>
+
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <div id="resultado" style="display: none;"></div>
+
+  <script src="pessoaFisica.js"></script>
+  <script>
+    const form = document.getElementById('form-cadastro');
+    const resultado = document.getElementById('resultado');
+
+    form.addEventListener('submit', function (evento) {
+      evento.preventDefault();
+
+      const pessoa = {
+        nome: document.getElementById('nome').value,
+        cpf: document.getElementById('cpf').value,
+        email: document.getElementById('email').value,
+        data_nascimento: document.getElementById('data_nascimento').value,
+        possui_cnh: document.getElementById('possui_cnh').checked,
+      };
+
+      const erros = PessoaFisica.validar(pessoa);
+
+      resultado.style.display = 'block';
+      if (erros.length === 0) {
+        resultado.className = 'sucesso';
+        resultado.innerHTML = 'Cadastro válido!';
+      } else {
+        resultado.className = 'erro';
+        resultado.innerHTML =
+          '<strong>Corrija os itens abaixo:</strong><ul>' +
+          erros.map(function (e) { return '<li>' + e + '</li>'; }).join('') +
+          '</ul>';
+      }
+    });
+  </script>
+</body>
+</html>
