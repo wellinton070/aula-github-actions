@@ -20,3 +20,30 @@ jobs:
 
       - name: Rodar a suíte
         run: node --test
+
+  build-e-publicar:
+    name: Build, publicar no Docker Hub e implantar no Render
+    needs: testar
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build e push da imagem
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/cadastro-pessoa-fisica:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/cadastro-pessoa-fisica:${{ github.sha }}
+
+      - name: Disparar o deploy no Render
+        run: curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
