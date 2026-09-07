@@ -1,0 +1,5 @@
+.git
+.github
+*.test.js
+README.md
+MANUAL-CI-CD-AWS.md
