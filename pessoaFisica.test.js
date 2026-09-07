@@ -184,8 +184,3 @@ test('garantirValido levanta DadosInvalidosError com a lista de erros', () => {
 test('garantirValido nao lanca excecao para cadastro valido', () => {
   assert.doesNotThrow(() => garantirValido(pessoa(), HOJE));
 });
-
-
-test('teste proposital que falha (demonstracao)', () => {
-  assert.equal(cpfValido('111.111.111-11'), true); // isso é falso, então vai falhar
-});
